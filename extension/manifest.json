@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Order History Export",
+  "version": "2.4.8",
+  "author": "517 Industries",
+  "description": "Export Amazon order history with items to CSV or JSON. By 517 Industries. Local only.",
+  "action": {
+    "default_title": "Order History Export",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["downloads", "storage", "tabs"],
+  "host_permissions": [
+    "https://www.amazon.com/*",
+    "https://www.amazon.co.uk/*",
+    "https://www.amazon.ca/*",
+    "https://www.amazon.com.au/*",
+    "https://www.amazon.de/*",
+    "https://www.amazon.fr/*",
+    "https://www.amazon.es/*",
+    "https://www.amazon.it/*",
+    "https://www.amazon.co.jp/*",
+    "https://www.amazon.in/*",
+    "https://www.amazon.com.mx/*",
+    "https://www.amazon.ae/*"
+  ]
+}

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    :root {
+      --ink: #e6e1d8;
+      --muted: #9a958c;
+      --line: #333333;
+      --bg: #121212;
+      --card: #1c1c1c;
+      --fill: #e6e1d8;
+      --on-fill: #121212;
+      --ok: #8fbf9a;
+      --warn: #d08a6a;
+      --radius-sm: 4px;  /* chips, small buttons, inputs, report tabs */
+      --radius-md: 6px;  /* format cards, tables, search, larger buttons */
+    }
+    html { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      width: 380px;
+      color: var(--ink);
+      background: var(--bg);
+      font: 13px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+      opacity: 0.96;
+      transition: opacity 160ms ease;
+    }
+    body.is-ready { opacity: 1; }
+    header {
+      padding: 16px 16px 14px;
+      background: #0c0c0c;
+      color: #fff;
+    }
+    header .logo {
+      display: block;
+      height: 28px;
+      width: auto;
+      max-width: 260px;
+      margin: 0 0 12px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    header p { margin: 6px 0 0; color: #9a958c; font-size: 12px; line-height: 1.4; }
+    main { padding: 16px 16px 10px; }
+    .label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--muted); margin: 16px 0 8px;
+    }
+    .label:first-child { margin-top: 0; }
+    select, input[type="date"], input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font: inherit;
+      color: var(--ink);
+    }
+    select { appearance: none; padding-right: 28px;
+      background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+      background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      background-color: var(--card);
+    }
+    .chips { display: grid; gap: 6px; }
+    #ranges { grid-template-columns: 1fr 1fr; }
+    #years { grid-template-columns: repeat(4, 1fr); }
+    #periodYear { grid-template-columns: repeat(4, 1fr); }
+    #quarters { grid-template-columns: repeat(4, 1fr); }
+    #months { grid-template-columns: repeat(4, 1fr); }
+    .chips button {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: var(--radius-sm);
+      padding: 7px 4px;
+      font: inherit;
+      font-weight: 600;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+    }
+    .chips button:hover { border-color: #3a3a3a; }
+    .chips button.on {
+      background: var(--fill);
+      border-color: var(--fill);
+      color: var(--on-fill);
+    }
+    #years { margin-top: 6px; }
+    #periodYear, #quarters, #months { margin-top: 6px; }
+    .dates { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+    .dates[hidden] { display: none; }
+    .formats { display: grid; gap: 6px; }
+    .formats label {
+      display: grid;
+      grid-template-columns: 16px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--line);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+    .formats label:has(input:checked) {
+      border-color: var(--fill);
+      border-left-color: var(--fill);
+      background: #242424;
+    }
+    input[type="radio"], input[type="checkbox"] { accent-color: var(--fill); }
+    .formats strong { display: block; font-size: 13px; }
+    .formats span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .check {
+      display: flex; gap: 8px; align-items: flex-start;
+      margin: 14px 0 0; cursor: pointer; font-size: 12px;
+    }
+    .hint, #cacheHint { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .hint.err { color: var(--warn); }
+    #formatHint { transition: color 140ms ease; }
+    #clearCache {
+      display: inline-block; width: auto; margin: 8px 0 0; padding: 0;
+      border: 0; background: none; color: var(--muted);
+      font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 16px; }
+    .actions .wide { grid-column: 1 / -1; }
+    button.primary, button.ghost, button.danger {
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    button.primary, button.ghost { transition: background 140ms ease; }
+    button.primary { border: 0; background: var(--fill); color: var(--on-fill); }
+    button.primary:hover { background: #fff; }
+    button.primary:disabled, button.danger:disabled { opacity: 0.45; cursor: default; }
+    button.ghost { border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+    button.danger { border: 0; background: #8a3b1d; color: #fff; display: none; }
+    button.danger.show { display: block; }
+    .progress { margin-top: 12px; display: none; opacity: 0; transition: opacity 160ms ease; }
+    .progress.show { display: block; }
+    .progress.is-visible { opacity: 1; }
+    .bar { height: 3px; background: #2c2c2c; border-radius: 0; overflow: hidden; }
+    .bar > i { display: block; height: 100%; width: 0; background: var(--fill); transition: width 280ms ease-out; }
+    #status { margin-top: 8px; font-size: 12px; color: var(--muted); }
+    #status.ok { color: var(--ok); }
+    #status.err { color: var(--warn); }
+    footer {
+      padding: 10px 16px 14px;
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    footer a { color: var(--fill); text-decoration: none; }
+    footer a + a { margin-left: 12px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; }
+      body { opacity: 1; }
+      .progress { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="brand/logo.svg" alt="517 Industries" />
+    <h1>Order History Export</h1>
+    <p>Uses the Amazon account already signed in on this Chrome profile. Nothing leaves your computer.</p>
+  </header>
+  <main>
+    <p class="label">Amazon site</p>
+    <select id="site"></select>
+
+    <p class="label">Date range</p>
+    <div class="chips" id="ranges"></div>
+    <div class="chips" id="years"></div>
+    <div class="chips" id="periodYear" style="display:none"></div>
+    <div class="chips" id="quarters" style="display:none"></div>
+    <div class="chips" id="months" style="display:none"></div>
+    <div class="dates" id="customDates" hidden>
+      <input type="date" id="fromDate" />
+      <input type="date" id="toDate" />
+    </div>
+
+    <p class="label">Report</p>
+    <div class="formats">
+      <label>
+        <input type="checkbox" name="format" value="orders" checked />
+        <div>
+          <strong>Orders</strong>
+          <span>One row per order, items listed together.</span>
+        </div>
+      </label>
+      <label>
+        <input type="checkbox" name="format" value="items" />
+        <div>
+          <strong>Items</strong>
+          <span>One row per product, with quantity and ASIN when available.</span>
+        </div>
+      </label>
+      <label>
+        <input type="checkbox" name="format" value="payments" />
+        <div>
+          <strong>Payments</strong>
+          <span>Card, last four, date, and amount. For matching a statement.</span>
+        </div>
+      </label>
+      <label>
+        <input type="checkbox" name="format" value="shipments" />
+        <div>
+          <strong>Shipments</strong>
+          <span>One row per package: status, tracking id, tracking link.</span>
+        </div>
+      </label>
+    </div>
+    <p id="formatHint" class="hint">Build will generate the Orders report.</p>
+    <label class="check">
+      <input type="checkbox" id="useCache" checked />
+      <span>Reuse saved invoices. Uncheck to refetch everything.</span>
+    </label>
+    <p id="cacheHint"></p>
+    <button type="button" id="clearCache" class="ghost">Clear saved invoices</button>
+
+    <div class="actions">
+      <button class="primary wide" id="start">Build report</button>
+      <button class="danger wide" id="stop">Stop</button>
+      <button class="ghost" id="openOrders">Open orders</button>
+      <button class="ghost" id="viewResults">View last report</button>
+    </div>
+    <div class="progress" id="progress">
+      <div class="bar"><i id="bar"></i></div>
+      <div id="status"></div>
+    </div>
+  </main>
+  <footer>
+    <span>517 Industries</span>
+    <span>
+      <a href="privacy.html" target="_blank">Privacy</a>
+      <a href="https://ko-fi.com/U7U5S8FW4" target="_blank" rel="noopener">Support this project</a>
+    </span>
+  </footer>
+  <script src="sites.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

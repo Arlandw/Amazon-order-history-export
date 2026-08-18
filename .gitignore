@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+qa/fixtures/order-details-*.html
+qa/fixtures/tracking-*.html
+*.webp
