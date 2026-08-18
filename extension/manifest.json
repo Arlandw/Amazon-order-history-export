@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Order History Export",
-  "version": "2.4.8",
+  "version": "2.4.9",
   "author": "517 Industries",
   "description": "Export Amazon order history with items to CSV or JSON. By 517 Industries. Local only.",
   "action": {
@@ -21,7 +21,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["downloads", "storage", "tabs"],
+  "permissions": ["storage", "tabs"],
   "host_permissions": [
     "https://www.amazon.com/*",
     "https://www.amazon.co.uk/*",
